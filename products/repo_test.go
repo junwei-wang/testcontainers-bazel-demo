@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 
@@ -34,6 +35,8 @@ func TestTrino(t *testing.T) {
 
 	connStr, err := trinoContainer.ConnectionString(ctx, "sslmode=disable")
 	assert.NoError(t, err)
+
+	time.Sleep(5 * time.Second)
 
 	fmt.Println("@JW: " + connStr)
 
