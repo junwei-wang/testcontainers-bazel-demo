@@ -48,5 +48,5 @@ use_repo(
     "com_github_jackc_pgx_v5",
     "com_github_stretchr_testify",
     "com_github_testcontainers_testcontainers_go",
-    "com_github_testcontainers_testcontainers_go_modules_postgres",
+    "com_github_trinodb_trino_go_client",
 )
