@@ -2,54 +2,76 @@ package products
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
+	"log"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
-	testcontainers "github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/modules/postgres"
-	"github.com/testcontainers/testcontainers-go/wait"
+	// _ "github.com/trinodb/trino-go-client/trino"
 )
 
-func TestProductRepository(t *testing.T) {
+func TestTrino(t *testing.T) {
 	ctx := context.Background()
 
-	pgContainer, err := postgres.RunContainer(ctx,
-		testcontainers.WithImage("postgres:16-alpine"),
-		postgres.WithDatabase("test-db"),
-		postgres.WithUsername("postgres"),
-		postgres.WithPassword("postgres"),
-		testcontainers.WithWaitStrategy(
-			wait.ForLog("database system is ready to accept connections").
-				WithOccurrence(2).WithStartupTimeout(5*time.Second)),
+	image := "registry.ddbuild.io/apm-trino:latest" // TODO: latest image in production
+	// TODO: to optimize the CPU and memory for performance
+	trinoContainer, err := Run(
+		ctx,
+		image,
+		WithCmd("/usr/lib/trino/bin/run-trino", "-Dcatalog.management=dynamic"),
 	)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	t.Cleanup(func() {
-		if err := pgContainer.Terminate(ctx); err != nil {
-			t.Fatalf("failed to terminate pgContainer: %s", err)
+		if err := trinoContainer.Terminate(ctx); err != nil {
+			t.Fatalf("failed to terminate trinoContainer: %s", err)
 		}
 	})
 
-	connStr, err := pgContainer.ConnectionString(ctx, "sslmode=disable")
+	connStr, err := trinoContainer.ConnectionString(ctx, "sslmode=disable")
 	assert.NoError(t, err)
 
-	repo, err := NewRepository(ctx, connStr)
+	fmt.Println("@JW: " + connStr)
+
+	// connStr1 := "http://localhost:8080"
+	db, err := sql.Open("trino", connStr) // TODO: replace the client
+	assert.NoError(t, err)
+	
+	// for {
+	// 	_, err = db.Query("select version()")
+	// 	assert.NoError(t, err)
+	// }
+
+	// TODO: before creating the catalog, make sure the container is properly until fully up
+	createEvpCatalogSQL := `CREATE CATALOG eventplatform USING eventplatform WITH (
+		"eventplatform.event_store_target" = 'event-store-api-grpc.us1.staging.dog:443', 
+		"eventplatform.is_local_mode" = 'true', 
+		"eventplatform.event_store_api_target_release_key" = 'logs-event-store-api-default', 
+		"eventplatform.reader_target" = 'event-store-reader-grpc.us1.staging.dog:443', 
+		"eventplatform.services_permitted_to_bypass_rbac" = 'my-service,other-service', 
+		"aaa.zoltron_target" = 'mocked'
+	)`
+	_, err = db.Query(createEvpCatalogSQL)
 	assert.NoError(t, err)
 
-	err = repo.CreateProductsTable(ctx)
+	catalogs, err := db.Query("SHOW CATALOGS")
 	assert.NoError(t, err)
 
-	c, err := repo.CreateProduct(ctx, Product{
-		Name: "iPhone 14",
-	})
-	assert.NoError(t, err)
-	assert.NotNil(t, c)
+	defer catalogs.Close()
+	var catalogNames []string
+	for catalogs.Next() {
+		var name string
+		if err := catalogs.Scan(&name); err != nil {
+			log.Fatal(err)
+			assert.NoError(t, err)
+		}
+		catalogNames = append(catalogNames, name)
+		// fmt.Printf("Having %s \n", name)
+	}
+	assert.Contains(t, catalogNames, "eventplatform")
 
-	product, err := repo.GetProductById(ctx, c.Id)
-	assert.NoError(t, err)
-	assert.NotNil(t, product)
-	assert.Equal(t, "iPhone 14", product.Name)
+	// time.Sleep(1000 * time.Second)
 }

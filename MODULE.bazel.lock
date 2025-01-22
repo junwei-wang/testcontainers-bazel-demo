@@ -1,6 +1,6 @@
 {
   "lockFileVersion": 3,
-  "moduleFileHash": "22ead45888fcf809a486f4da0f74adb6e1bf48cace9d2af878b85b359c479f1c",
+  "moduleFileHash": "99b9fd5f89f78eb1921ba9f05c601396a73fc824036692b03e320d648032ff19",
   "flags": {
     "cmdRegistries": [
       "https://bcr.bazel.build/"
@@ -106,8 +106,7 @@
           "imports": {
             "com_github_jackc_pgx_v5": "com_github_jackc_pgx_v5",
             "com_github_stretchr_testify": "com_github_stretchr_testify",
-            "com_github_testcontainers_testcontainers_go": "com_github_testcontainers_testcontainers_go",
-            "com_github_testcontainers_testcontainers_go_modules_postgres": "com_github_testcontainers_testcontainers_go_modules_postgres"
+            "com_github_testcontainers_testcontainers_go": "com_github_testcontainers_testcontainers_go"
           },
           "devImports": [],
           "tags": [
@@ -1910,7 +1909,7 @@
           "@@gazelle~0.34.0//:go.mod": "9ae159a385b2f244bbe964b9f91dbea6e7bd534e0b22e846655f241c65de2c49",
           "@@//products:go.sum": "50660f77172413d9a16453d2df1c8f0c5c765154ee704dbb91e6220469648632",
           "@@contrib_rules_jvm~0.21.4//:go.mod": "f5cee857977bb6e766824ae95273d5b9657ea60e0e47a785956dec060e31b7ba",
-          "@@//products:go.mod": "36c9927687ac1fdf4feb8cf0766274109bd468e920156f4f1f7c19b003a9f05f",
+          "@@//products:go.mod": "90e7cc90c7e0d61d9e2d7dff4e7ffaf72a9a7884af91a27ee47d5ea271ab5b84",
           "@@contrib_rules_jvm~0.21.4//:go.sum": "189e303356034acf571d1440de3a04e0bda29d588d97fa61eb33c35dd061c050",
           "@@rules_go~0.43.0//:go.sum": "c6368ec1da45691f9148115d7317e740c3b32313b624b8f6545ef36b2ab4d781",
           "@@gazelle~0.34.0//:go.sum": "7469786f3930030c430969cedae951e6947cb40f4a563dac94a350659c0fedc4"
@@ -2922,7 +2921,6 @@
                 "com_github_jackc_pgx_v5": "github.com/jackc/pgx/v5",
                 "com_github_stretchr_testify": "github.com/stretchr/testify",
                 "com_github_testcontainers_testcontainers_go": "github.com/testcontainers/testcontainers-go",
-                "com_github_testcontainers_testcontainers_go_modules_postgres": "github.com/testcontainers/testcontainers-go/modules/postgres",
                 "cat_dario_mergo": "dario.cat/mergo",
                 "com_github_azure_go_ansiterm": "github.com/Azure/go-ansiterm",
                 "com_github_microsoft_go_winio": "github.com/Microsoft/go-winio",
@@ -3061,30 +3059,13 @@
               "replace": "",
               "version": "v0.5.0"
             }
-          },
-          "com_github_testcontainers_testcontainers_go_modules_postgres": {
-            "bzlFile": "@@gazelle~0.34.0//internal:go_repository.bzl",
-            "ruleClassName": "go_repository",
-            "attributes": {
-              "name": "gazelle~0.34.0~go_deps~com_github_testcontainers_testcontainers_go_modules_postgres",
-              "importpath": "github.com/testcontainers/testcontainers-go/modules/postgres",
-              "build_directives": [],
-              "build_file_generation": "auto",
-              "build_extra_args": [],
-              "patches": [],
-              "patch_args": [],
-              "sum": "h1:I5UydATCgDjdOjhKy2ztjw3EhzKgug6xsVzmJ129+wQ=",
-              "replace": "",
-              "version": "v0.26.0"
-            }
           }
         },
         "moduleExtensionMetadata": {
           "explicitRootModuleDirectDeps": [
             "com_github_jackc_pgx_v5",
             "com_github_stretchr_testify",
-            "com_github_testcontainers_testcontainers_go",
-            "com_github_testcontainers_testcontainers_go_modules_postgres"
+            "com_github_testcontainers_testcontainers_go"
           ],
           "explicitRootModuleDirectDevDeps": [],
           "useAllRepos": "NO"
