@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"log"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
-	// _ "github.com/trinodb/trino-go-client/trino"
+	_ "github.com/trinodb/trino-go-client/trino"
 )
 
 func TestTrino(t *testing.T) {
@@ -34,10 +35,12 @@ func TestTrino(t *testing.T) {
 	connStr, err := trinoContainer.ConnectionString(ctx, "sslmode=disable")
 	assert.NoError(t, err)
 
+	time.Sleep(100 * time.Second)
+
 	fmt.Println("@JW: " + connStr)
 
 	// connStr1 := "http://localhost:8080"
-	db, err := sql.Open("trino", connStr) // TODO: replace the client
+	db, err := sql.Open("test", connStr) // TODO: replace the client
 	assert.NoError(t, err)
 	
 	// for {
@@ -73,5 +76,5 @@ func TestTrino(t *testing.T) {
 	}
 	assert.Contains(t, catalogNames, "eventplatform")
 
-	// time.Sleep(1000 * time.Second)
+	time.Sleep(100 * time.Second)
 }

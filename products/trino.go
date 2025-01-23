@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	defaultUser = "test"
+	defaultUser = "trino"
 	defaultPort = "8080/tcp"
 )
 
